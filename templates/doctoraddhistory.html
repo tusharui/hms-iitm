@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Update Patient History - HMS{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Update Patient History</h1>
+        <a href="{{ url_for('doctor.doctor_dashboard') }}" class="btn btn-secondary">Back</a>
+    </header>
+
+    <section class="dashboard-section">
+        <div class="patient-info">
+            <p><strong>Patient Name:</strong> {{ patient.name }}</p>
+            <p><strong>Department:</strong> {{ doctor.department.name if doctor.department else 'N/A' }}</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('doctor.add_patient_history', patient_id=patient.id) }}" class="form-container">
+            <div class="form-group">
+                <label for="visit_type">Visit Type</label>
+                <input type="text" id="visit_type" name="visit_type" value="In-person" required>
+            </div>
+            <div class="form-group">
+                <label for="tests_done">Tests Done</label>
+                <input type="text" id="tests_done" name="tests_done" placeholder="e.g., ECG, Blood Test">
+            </div>
+            <div class="form-group">
+                <label for="diagnosis">Diagnosis</label>
+                <textarea id="diagnosis" name="diagnosis" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="prescription">Prescription</label>
+                <textarea id="prescription" name="prescription" rows="3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="medicines">Medicines</label>
+                <textarea id="medicines" name="medicines" rows="3" placeholder="Enter medicines separated by commas" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <p class="form-note">Students can add/remove fields based on what they need to store in patient's history</p>
+    </section>
+</div>
+{% endblock %}
+
+ 

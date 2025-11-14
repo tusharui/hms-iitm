@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Availability - HMS{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Doctor's Availability</h1>
+        <a href="{{ url_for('doctor.doctor_dashboard') }}" class="btn btn-secondary">Back</a>
+    </header>
+
+    <section class="dashboard-section">
+        <form method="POST" action="{{ url_for('doctor.doctor_availability') }}" class="form-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time Slot 1 (Morning)</th>
+                        <th>Time Slot 2 (Evening)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in range(7) %}
+                    {% set current_date = week_dates[i] %}
+                    {% set date_str = current_date.strftime('%Y-%m-%d') %}
+                    {% set avail = availabilities.get(current_date) %}
+                    <tr>
+                        <td>{{ current_date.strftime('%d/%m/%Y') }}</td>
+                        <td>
+                            <input type="text" name="time_slot_1_{{ i }}" 
+                                   value="{{ avail.time_slot_1 if avail else '' }}" 
+                                   placeholder="e.g., 08:00-12:00">
+                        </td>
+                        <td>
+                            <input type="text" name="time_slot_2_{{ i }}" 
+                                   value="{{ avail.time_slot_2 if avail else '' }}" 
+                                   placeholder="e.g., 16:00-21:00">
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+        <p class="form-note">Time periods can be used as slots for morning and evening shift</p>
+    </section>
+</div>
+{% endblock %}
+
+ 

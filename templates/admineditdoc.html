@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Doctor - HMS{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <h1>Edit Doctor</h1>
+    <form method="POST" action="{{ url_for('admin.edit_doctor', doctor_id=doctor.id) }}" class="form-container">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ doctor.user.username if doctor.user else '' }}" disabled>
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" value="{{ doctor.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="specialization">Specialization</label>
+            <input type="text" id="specialization" name="specialization" value="{{ doctor.specialization }}">
+        </div>
+        <div class="form-group">
+            <label for="department">Department</label>
+            <select id="department" name="department">
+                <option value=""> keep current </option>
+                {% for dept in departments %}
+                <option value="{{ dept.name }}" {% if doctor.department and doctor.department.id==dept.id %}selected{% endif %}>{{ dept.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="qualifications">Qualifications</label>
+            <input type="text" id="qualifications" name="qualifications" value="{{ doctor.qualifications or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="experience">Experience</label>
+            <input type="text" id="experience" name="experience" value="{{ doctor.experience or '' }}">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description">{{ doctor.description or '' }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
+ 

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Dr. {{ doctor.name }} - HMS{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Dr. {{ doctor.name }}</h1>
+        <a href="{{ url_for('patient.view_department', dept_id=doctor.department_id) if doctor.department_id else url_for('patient.patient_dashboard') }}" class="btn btn-secondary">Go Back</a>
+    </header>
+
+    <section class="dashboard-section">
+        <div class="doctor-profile">
+            <h2>{{ doctor.qualifications if doctor.qualifications else 'MBBS' }}</h2>
+            <p><strong>{{ doctor.specialization }}</strong></p>
+            <p>{{ doctor.experience if doctor.experience else 'Experienced' }} Experience Overall</p>
+            <p>{{ doctor.description if doctor.description else 'Experienced medical professional dedicated to patient care.' }}</p>
+        </div>
+
+        <h2>Doctor's Availability</h2>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Time Slot 1</th>
+                    <th>Time Slot 2</th>
+                    <th>Book Appointment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(7) %}
+                {% set current_date = week_dates[i] %}
+                {% set date_str = current_date.strftime('%Y-%m-%d') %}
+                {% set avail = availabilities.get(current_date) %}
+                <tr>
+                    <td>{{ current_date.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ avail.time_slot_1 if avail and avail.time_slot_1 else 'Not available' }}</td>
+                    <td>{{ avail.time_slot_2 if avail and avail.time_slot_2 else 'Not available' }}</td>
+                    <td>
+                        {% if avail and (avail.time_slot_1 or avail.time_slot_2) %}
+                        <form method="POST" action="{{ url_for('patient.book_appointment', doctor_id=doctor.id) }}" style="display:inline;">
+                            <input type="hidden" name="date" value="{{ date_str }}">
+                            <select name="time" required>
+                                <option value="">Select time</option>
+                                {% if avail.time_slot_1 %}
+                                <option value="{{ avail.time_slot_1 }}">{{ avail.time_slot_1 }}</option>
+                                {% endif %}
+                                {% if avail.time_slot_2 %}
+                                <option value="{{ avail.time_slot_2 }}">{{ avail.time_slot_2 }}</option>
+                                {% endif %}
+                            </select>
+                            <select name="visit_type" required>
+                                <option value="In-person">In-person</option>
+                                <option value="Online">Online</option>
+                            </select>
+                            <button type="submit" class="btn btn-small btn-primary">Book</button>
+                        </form>
+                        {% else %}
+                        <span>Not available</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+</div>
+{% endblock %}
+
+ 

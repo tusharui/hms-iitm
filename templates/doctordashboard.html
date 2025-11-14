@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Doctor Dashboard - HMS{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <header class="dashboard-header">
+        <h1>Welcome Dr. {{ doctor.name }}</h1>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+    </header>
+
+    <div class="dashboard-grid">
+        <section class="dashboard-section">
+            <h2>Upcoming Appointments</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Sr No.</th>
+                        <th>Patient Name</th>
+                        <th>Visit Type</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appointment in appointments %}
+                    <tr>
+                        <td>{{ appointment.id }}</td>
+                        <td>{{ appointment.patient.name }}</td>
+                        <td>{{ appointment.visit_type }}</td>
+                        <td>{{ appointment.appointment_date.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ appointment.appointment_time }}</td>
+                        <td>
+                            <a href="{{ url_for('doctor.add_patient_history', patient_id=appointment.patient.id) }}" class="btn btn-small btn-info">Update</a>
+                            <form method="POST" action="{{ url_for('doctor.complete_appointment', appointment_id=appointment.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-small btn-success">Mark as Complete</button>
+                            </form>
+                            <form method="POST" action="{{ url_for('doctor.doctor_cancel_appointment', appointment_id=appointment.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-small btn-danger">Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Assigned Patients</h2>
+            <div class="list-container">
+                {% for patient in patients %}
+                <div class="list-item">
+                    <span>{{ patient.name }}</span>
+                    <a href="{{ url_for('doctor.doctor_view_patient_history', patient_id=patient.id) }}" class="btn btn-small btn-info">View Details</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    <section class="dashboard-section">
+        <h2>Doctor's Availability</h2>
+        <a href="{{ url_for('doctor.doctor_availability') }}" class="btn btn-primary">Manage Availability</a>
+    </section>
+</div>
+{% endblock %}
+
+ 
